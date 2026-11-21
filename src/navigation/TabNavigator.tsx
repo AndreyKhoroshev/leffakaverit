@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 import HakuScreen from '../screens/HakuScreen';
 import ListatScreen from '../screens/ListatScreen';
 import EnsiIllatScreen from '../screens/EnsiIllatScreen';
@@ -14,10 +15,25 @@ export type TabParamList = {
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
+// Jokaisen välilehden kuvake
+const ikonit: Record<keyof TabParamList, keyof typeof Ionicons.glyphMap> = {
+  Haku: 'search',
+  Listat: 'list',
+  EnsiIllat: 'calendar',
+  Kaverit: 'people',
+};
+
 // Alavalikko, jossa ovat sovelluksen päänäkymät
 export default function TabNavigator() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        // Näytetään välilehden kuvake taulukosta
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name={ikonit[route.name]} size={size} color={color} />
+        ),
+      })}
+    >
       <Tab.Screen name="Haku" component={HakuScreen} />
       <Tab.Screen name="Listat" component={ListatScreen} />
       <Tab.Screen
