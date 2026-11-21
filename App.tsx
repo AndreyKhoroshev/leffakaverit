@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import TabNavigator from './src/navigation/TabNavigator';
+import RootNavigator from './src/navigation/RootNavigator';
 
 // Sovelluksen juurikomponentti
 export default function App() {
   return (
     <NavigationContainer>
-      <TabNavigator />
+      <RootNavigator />
       <StatusBar style="auto" />
     </NavigationContainer>
   );
