@@ -15,3 +15,19 @@ export type HakuVastaus = {
   total_pages: number;
   total_results: number;
 };
+
+// Näyttelijä elokuvan tekijätiedoissa
+export type Nayttelija = {
+  id: number;
+  credit_id: string;
+  name: string;
+  character: string;
+  profile_path: string | null;
+};
+
+// Elokuvan tarkemmat tiedot (sisältää myös näyttelijät)
+export type ElokuvaTiedot = Elokuva & {
+  runtime: number | null;
+  genres: { id: number; name: string }[];
+  credits: { cast: Nayttelija[] };
+};

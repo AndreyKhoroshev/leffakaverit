@@ -1,4 +1,4 @@
-import { Elokuva, HakuVastaus } from '../types/tmdb';
+import { Elokuva, ElokuvaTiedot, HakuVastaus } from '../types/tmdb';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const TOKEN = process.env.EXPO_PUBLIC_TMDB_TOKEN;
@@ -29,4 +29,20 @@ export async function haeElokuvia(hakusana: string): Promise<Elokuva[]> {
     `/search/movie?query=${encodeURIComponent(hakusana)}&language=fi-FI`
   );
   return data.results;
+}
+
+// Hakee elokuvan tarkemmat tiedot ja näyttelijät yhdellä kutsulla
+export async function haeElokuvanTiedot(id: number): Promise<ElokuvaTiedot> {
+  const tiedot = await haeTmdb<ElokuvaTiedot>(
+    `/movie/${id}?language=fi-FI&append_to_response=credits`
+  );
+
+  // Jos suomenkielistä kuvausta ei ole, haetaan englanninkielinen
+  if (!tiedot.overview) {
+    const englanniksi = await haeTmdb<ElokuvaTiedot>(
+      `/movie/${id}?language=en-US`
+    );
+    tiedot.overview = englanniksi.overview;
+  }
+  return tiedot;
 }
