@@ -24,8 +24,9 @@ export default function RekisteroitymisScreen() {
 
   const kasitteleRekisteroityminen = async () => {
     // Tarkistetaan kentät ennen Firebase-kutsua
-    if (kayttajanimi.trim().length < 3) {
-      setVirhe('Käyttäjänimen täytyy olla vähintään 3 merkkiä.');
+    // Käyttäjänimi: 3–20 merkkiä, vain kirjaimia, numeroita tai _
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(kayttajanimi.trim())) {
+      setVirhe('Käyttäjänimessä saa olla 3–20 merkkiä: kirjaimia, numeroita tai _.');
       return;
     }
     if (salasana !== salasana2) {

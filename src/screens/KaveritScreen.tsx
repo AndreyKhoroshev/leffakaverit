@@ -3,14 +3,14 @@ import { useAuth } from '../context/AuthContext';
 
 // Kaverit ja heidän listansa
 export default function KaveritScreen() {
-  const { kayttaja, kirjauduUlos } = useAuth();
+  const { profiili, kirjauduUlos } = useAuth();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Kaverit</Text>
 
       {/* Väliaikainen: näytetään kirjautunut käyttäjä ja uloskirjautuminen */}
-      <Text style={styles.info}>Kirjautunut: {kayttaja?.email}</Text>
+      <Text style={styles.info}>Kirjautunut: {profiili?.kayttajanimi}</Text>
       <Button title="Kirjaudu ulos" onPress={kirjauduUlos} />
     </View>
   );

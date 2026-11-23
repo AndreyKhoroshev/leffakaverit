@@ -21,6 +21,10 @@ export function authVirheviesti(virhe: unknown): string {
       case 'auth/too-many-requests':
         return 'Liian monta yritystä. Yritä myöhemmin uudelleen.';
     }
+      // Oma virhe: käyttäjänimi on jo jollain toisella
+  if (virhe instanceof Error && virhe.message === 'KAYTTAJANIMI_VARATTU') {
+    return 'Käyttäjänimi on jo varattu.';
+  }
   }
   return 'Jotain meni pieleen. Yritä uudelleen.';
 }
