@@ -1,30 +1,74 @@
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './TabNavigator';
 import ElokuvaScreen from '../screens/ElokuvaScreen';
+import KirjautumisScreen from '../screens/KirjautumisScreen';
+import RekisteroitymisScreen from '../screens/RekisteroitymisScreen';
+import { useAuth } from '../context/AuthContext';
 
 // Päänavigaation näkymät ja niiden parametrit
 export type RootStackParamList = {
+  Kirjautuminen: undefined;
+  Rekisteroityminen: undefined;
   Tabs: undefined;
   Elokuva: { elokuvaId: number };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-// Päänavigaatio: alavalikko + näkymät, jotka avautuvat sen päälle
+// Päänavigaatio: näytettävät näkymät riippuvat siitä, onko käyttäjä kirjautunut
 export default function RootNavigator() {
+  const { kayttaja, lataa } = useAuth();
+
+  // Odotetaan, kunnes Firebase kertoo kirjautumistilan
+  if (lataa) {
+    return (
+      <View style={styles.keskella}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <Stack.Navigator>
-      {/* Alavalikolla on oma otsikko, joten Stackin otsikko piilotetaan */}
-      <Stack.Screen
-        name="Tabs"
-        component={TabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Elokuva"
-        component={ElokuvaScreen}
-        options={{ title: 'Elokuva' }}
-      />
+      {kayttaja ? (
+        // Kirjautuneen käyttäjän näkymät
+        <>
+          <Stack.Screen
+            name="Tabs"
+            component={TabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Elokuva"
+            component={ElokuvaScreen}
+            options={{ title: 'Elokuva' }}
+          />
+        </>
+      ) : (
+        // Kirjautumattoman käyttäjän näkymät
+        <>
+          <Stack.Screen
+            name="Kirjautuminen"
+            component={KirjautumisScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Rekisteroityminen"
+            component={RekisteroitymisScreen}
+            options={{ title: 'Rekisteröidy' }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
+
+// Tyylit
+const styles = StyleSheet.create({
+  keskella: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
