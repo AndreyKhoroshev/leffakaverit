@@ -13,6 +13,7 @@ import type { RootStackParamList } from '../navigation/RootNavigator';
 import { useElokuvanTiedot } from '../hooks/useElokuvanTiedot';
 import { julisteUrl } from '../services/tmdb';
 import NayttelijaKortti from '../components/NayttelijaKortti';
+import ListaPainikkeet from '../components/ListaPainikkeet';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Elokuva'>;
 
@@ -73,6 +74,9 @@ export default function ElokuvaScreen({ route, navigation }: Props) {
           </Text>
         </View>
       </View>
+
+      {/* Listapainikkeet: haluan katsoa / katsottu */}
+      <ListaPainikkeet elokuva={tiedot} />
 
       {/* Juonikuvaus */}
       <Text style={styles.otsikko}>Juoni</Text>
