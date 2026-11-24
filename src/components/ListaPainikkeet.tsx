@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { useListaElokuva } from '../hooks/useListaElokuva';
 import { asetaListalle, poistaListalta } from '../services/elokuvaLista';
 import { ElokuvanPerustiedot, ListaTila } from '../types/lista';
+import ArvioLomake from './ArvioLomake';
 
 type Props = {
   elokuva: ElokuvanPerustiedot;
@@ -39,17 +40,24 @@ export default function ListaPainikkeet({ elokuva }: Props) {
   };
 
   return (
-    <View style={styles.rivi}>
-      <Painike
-        teksti="Haluan katsoa"
-        valittu={nykyinenTila === 'katsottava'}
-        onPress={() => valitse('katsottava')}
-      />
-      <Painike
-        teksti="Katsottu"
-        valittu={nykyinenTila === 'katsottu'}
-        onPress={() => valitse('katsottu')}
-      />
+    <View>
+      <View style={styles.rivi}>
+        <Painike
+          teksti="Haluan katsoa"
+          valittu={nykyinenTila === 'katsottava'}
+          onPress={() => valitse('katsottava')}
+        />
+        <Painike
+          teksti="Katsottu"
+          valittu={nykyinenTila === 'katsottu'}
+          onPress={() => valitse('katsottu')}
+        />
+      </View>
+
+      {/* Arviolomake näytetään vain katsotuille elokuville */}
+      {listaElokuva?.tila === 'katsottu' && (
+        <ArvioLomake listaElokuva={listaElokuva} />
+      )}
     </View>
   );
 }
