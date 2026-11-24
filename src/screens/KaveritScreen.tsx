@@ -10,6 +10,9 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/RootNavigator';
 import { useAuth } from '../context/AuthContext';
 import { useKaverit } from '../hooks/useKaverit';
 import {
@@ -23,6 +26,8 @@ import KaveriRivi from '../components/KaveriRivi';
 
 // Kaverit: lisääminen, saapuneet pyynnöt ja kaverilista
 export default function KaveritScreen() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { kayttaja, profiili, kirjauduUlos } = useAuth();
   const { kaverit, pyynnot, lataa } = useKaverit(kayttaja?.uid);
   const [hakunimi, setHakunimi] = useState('');
@@ -144,7 +149,7 @@ export default function KaveritScreen() {
   );
 
   // Teksti, joka näytetään, kun kavereita ei ole
-   const tyhja = lataa ? undefined : (
+  const tyhja = lataa ? undefined : (
     <Text style={styles.tyhja}>
       Ei vielä kavereita. Lisää kaveri käyttäjänimellä.
     </Text>
@@ -154,7 +159,18 @@ export default function KaveritScreen() {
     <FlatList
       data={kaverit}
       keyExtractor={(item) => item.uid}
-      renderItem={({ item }) => <KaveriRivi kaveri={item} />}
+      renderItem={({ item }) => (
+        <KaveriRivi
+          kaveri={item}
+          // Avataan kaverin listat (toimii vain hyväksytyille kavereille)
+          onAvaa={() =>
+            navigation.navigate('KaverinListat', {
+              uid: item.uid,
+              kayttajanimi: item.kayttajanimi,
+            })
+          }
+        />
+      )}
       ListHeaderComponent={ylaosa}
       ListEmptyComponent={tyhja}
       keyboardShouldPersistTaps="handled"

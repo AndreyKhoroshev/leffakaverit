@@ -2,6 +2,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './TabNavigator';
 import ElokuvaScreen from '../screens/ElokuvaScreen';
+import KaverinListatScreen from '../screens/KaverinListatScreen';
 import KirjautumisScreen from '../screens/KirjautumisScreen';
 import RekisteroitymisScreen from '../screens/RekisteroitymisScreen';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   Rekisteroityminen: undefined;
   Tabs: undefined;
   Elokuva: { elokuvaId: number };
+  KaverinListat: { uid: string; kayttajanimi: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -43,6 +45,12 @@ export default function RootNavigator() {
             name="Elokuva"
             component={ElokuvaScreen}
             options={{ title: 'Elokuva' }}
+          />
+          <Stack.Screen
+            name="KaverinListat"
+            component={KaverinListatScreen}
+            // Otsikoksi kaverin käyttäjänimi
+            options={({ route }) => ({ title: route.params.kayttajanimi })}
           />
         </>
       ) : (
