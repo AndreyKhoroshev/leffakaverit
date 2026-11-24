@@ -1,14 +1,16 @@
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import { Elokuva } from '../types/tmdb';
+import { ElokuvanPerustiedot } from '../types/lista';
 import { julisteUrl } from '../services/tmdb';
 
 type Props = {
-  elokuva: Elokuva;
+  elokuva: ElokuvanPerustiedot;
   onPress: () => void;
+  // Valinnainen lisärivi, esim. oma arvosana
+  lisatieto?: string;
 };
 
-// Yksi rivi hakutuloksissa: juliste, nimi ja vuosi
-export default function ElokuvaKortti({ elokuva, onPress }: Props) {
+// Yksi rivi elokuvalistassa: juliste, nimi, vuosi ja mahdollinen lisätieto
+export default function ElokuvaKortti({ elokuva, onPress, lisatieto }: Props) {
   const kuva = julisteUrl(elokuva.poster_path);
   const vuosi = elokuva.release_date?.slice(0, 4);
 
@@ -23,6 +25,7 @@ export default function ElokuvaKortti({ elokuva, onPress }: Props) {
       <View style={styles.tiedot}>
         <Text style={styles.nimi}>{elokuva.title}</Text>
         {vuosi ? <Text style={styles.vuosi}>{vuosi}</Text> : null}
+        {lisatieto ? <Text style={styles.lisatieto}>{lisatieto}</Text> : null}
       </View>
     </Pressable>
   );
@@ -56,5 +59,9 @@ const styles = StyleSheet.create({
   vuosi: {
     color: '#666',
     marginTop: 4,
+  },
+  lisatieto: {
+    marginTop: 4,
+    fontWeight: '600',
   },
 });

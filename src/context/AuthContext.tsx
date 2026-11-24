@@ -116,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const konteksti = useContext(AuthContext);
   if (!konteksti) {
-    throw new Error('useAuth täytyy käyттää AuthProviderin sisällä');
+    throw new Error('useAuth täytyy käyttää AuthProviderin sisällä');
   }
   return konteksti;
 }
