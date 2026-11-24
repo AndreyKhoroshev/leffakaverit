@@ -46,3 +46,35 @@ export async function haeElokuvanTiedot(id: number): Promise<ElokuvaTiedot> {
   }
   return tiedot;
 }
+
+// Tulevat ensi-illat seuraavan puolen vuoden ajalta, lähin ensin
+export async function haeTulevat(): Promise<Elokuva[]> {
+  // Aikaväli: tästä päivästä kuuden kuukauden päähän (muodossa 2026-11-24)
+  const tanaan = new Date();
+  const alku = tanaan.toISOString().slice(0, 10);
+  const loppuPvm = new Date(tanaan);
+  loppuPvm.setMonth(loppuPvm.getMonth() + 6);
+  const loppu = loppuPvm.toISOString().slice(0, 10);
+
+  // Suosituimmat tulevat elokuvat aikavälillä
+  const polku = (sivu: number) =>
+    `/discover/movie?language=fi-FI&sort_by=popularity.desc` +
+    `&primary_release_date.gte=${alku}&primary_release_date.lte=${loppu}` +
+    `&page=${sivu}`;
+
+  // Haetaan kolme sivua samaan aikaan (20 elokuvaa sivulla)
+  const sivut = await Promise.all(
+    [1, 2, 3].map((sivu) => haeTmdb<HakuVastaus>(polku(sivu)))
+  );
+
+  // Yhdistetään sivut ja poistetaan mahdolliset tuplat id:n perusteella
+  const elokuvat = new Map<number, Elokuva>();
+  sivut
+    .flatMap((sivu) => sivu.results)
+    .forEach((e) => elokuvat.set(e.id, e));
+
+  // Vain elokuvat, joilla on päivämäärä ja juliste, lähin ensi-ilta ensin
+  return [...elokuvat.values()]
+    .filter((e) => e.release_date && e.poster_path)
+    .sort((a, b) => a.release_date.localeCompare(b.release_date));
+}
