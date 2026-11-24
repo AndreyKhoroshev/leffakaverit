@@ -96,7 +96,7 @@ export default function KaveritScreen() {
         </Pressable>
       </View>
 
-      {/* Kaverin lisääminen käyttäjänimellä */}
+      {/* Kaverin lisääminen käyttäjänimellä tai QR-koodilla */}
       <Text style={styles.otsikko}>Lisää kaveri</Text>
       <View style={styles.lisaysRivi}>
         <TextInput
@@ -119,6 +119,13 @@ export default function KaveritScreen() {
           ) : (
             <Ionicons name="person-add" size={20} color="#fff" />
           )}
+        </Pressable>
+        {/* QR-koodinäkymä: oma koodi ja skannaus */}
+        <Pressable
+          style={styles.qrPainike}
+          onPress={() => navigation.navigate('Qr')}
+        >
+          <Ionicons name="qr-code-outline" size={20} color="#007AFF" />
         </Pressable>
       </View>
       {viesti ? (
@@ -223,6 +230,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
     borderRadius: 8,
     paddingHorizontal: 16,
+    justifyContent: 'center',
+  },
+  qrPainike: {
+    borderWidth: 1,
+    borderColor: '#007AFF',
+    borderRadius: 8,
+    paddingHorizontal: 12,
     justifyContent: 'center',
   },
   virhe: {

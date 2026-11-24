@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './TabNavigator';
 import ElokuvaScreen from '../screens/ElokuvaScreen';
 import KaverinListatScreen from '../screens/KaverinListatScreen';
+import QrScreen from '../screens/QrScreen';
 import KirjautumisScreen from '../screens/KirjautumisScreen';
 import RekisteroitymisScreen from '../screens/RekisteroitymisScreen';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +15,7 @@ export type RootStackParamList = {
   Tabs: undefined;
   Elokuva: { elokuvaId: number };
   KaverinListat: { uid: string; kayttajanimi: string };
+  Qr: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -51,6 +53,11 @@ export default function RootNavigator() {
             component={KaverinListatScreen}
             // Otsikoksi kaverin käyttäjänimi
             options={({ route }) => ({ title: route.params.kayttajanimi })}
+          />
+          <Stack.Screen
+            name="Qr"
+            component={QrScreen}
+            options={{ title: 'QR-koodi' }}
           />
         </>
       ) : (
