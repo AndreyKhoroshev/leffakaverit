@@ -80,3 +80,14 @@ export async function haeTulevat(): Promise<Elokuva[]> {
     .filter((e) => e.release_date && e.poster_path)
     .sort((a, b) => a.release_date.localeCompare(b.release_date));
 }
+
+// Arpoo satunnaisen suositun elokuvan TMDB:stä
+export async function haeSatunnainenElokuva(): Promise<Elokuva> {
+  // Satunnainen sivu 1–20 suosituimmista elokuvista
+  const sivu = Math.floor(Math.random() * 20) + 1;
+  const data = await haeTmdb<HakuVastaus>(
+    `/movie/popular?language=fi-FI&page=${sivu}`
+  );
+  // Satunnainen elokuva sivulta
+  return data.results[Math.floor(Math.random() * data.results.length)];
+}
