@@ -14,6 +14,7 @@ import { useElokuvanTiedot } from '../hooks/useElokuvanTiedot';
 import { julisteUrl } from '../services/tmdb';
 import NayttelijaKortti from '../components/NayttelijaKortti';
 import ListaPainikkeet from '../components/ListaPainikkeet';
+import KalenteriPainike from '../components/KalenteriPainike';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Elokuva'>;
 
@@ -77,6 +78,12 @@ export default function ElokuvaScreen({ route, navigation }: Props) {
 
       {/* Listapainikkeet: haluan katsoa / katsottu */}
       <ListaPainikkeet elokuva={tiedot} />
+
+      {/* Tuleville elokuville: ensi-ilta kalenteriin */}
+      <KalenteriPainike
+        nimi={tiedot.title}
+        julkaisupaiva={tiedot.release_date}
+      />
 
       {/* Juonikuvaus */}
       <Text style={styles.otsikko}>Juoni</Text>

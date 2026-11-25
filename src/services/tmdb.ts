@@ -56,12 +56,14 @@ export async function haeTulevat(): Promise<Elokuva[]> {
   loppuPvm.setMonth(loppuPvm.getMonth() + 6);
   const loppu = loppuPvm.toISOString().slice(0, 10);
 
-  // Suosituimmat tulevat elokuvat aikavälillä
+  // Suosituimmat elokuvat, joilla on teatteriensi-ilta Suomessa aikavälillä.
+  // region=FI: käytetään Suomen julkaisupäivää maailmanlaajuisen sijaan.
+  // with_release_type=3|2: teatterijulkaisu (3) tai rajoitettu teatterijulkaisu (2).
   const polku = (sivu: number) =>
     `/discover/movie?language=fi-FI&sort_by=popularity.desc` +
-    `&primary_release_date.gte=${alku}&primary_release_date.lte=${loppu}` +
+    `&region=FI&with_release_type=3|2` +
+    `&release_date.gte=${alku}&release_date.lte=${loppu}` +
     `&page=${sivu}`;
-
   // Haetaan kolme sivua samaan aikaan (20 elokuvaa sivulla)
   const sivut = await Promise.all(
     [1, 2, 3].map((sivu) => haeTmdb<HakuVastaus>(polku(sivu)))
